@@ -41,6 +41,20 @@ def login_validation():
     else:
         return redirect('/')
 
+@app.route('/add_user',  methods=['POST'])
+def add_user():
+    name = request.form.get('uname')
+    email = request.form.get('uemail')
+    password = request.form.get('upassword')
+
+    cursor.execute("""INSERT * INTO `users` (`user_id`, `name`, `email`, `password`) VALUES (NULL, '{}','{}','{}')""".format(name,email,password))
+    conn.commit()
+
+    cursor.execute("""SELECT * FROM `users` WHERE `email` LIKE '{}'""".format(email))
+    myuser=cursor.fetchall()
+    session['user_id'] = myuser[0][0]
+    return redirect('/home')
+
 @app.route('/logout')
 def logout():
     session.pop('user_id')
